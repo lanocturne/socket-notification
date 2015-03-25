@@ -1,44 +1,47 @@
 var app = require('express')();
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
-
-
-http.listen(8080);
-
-io.on('connection', function(socket) {
-	var mock=[{
-    	user: 'Atul',
-    	type: 'document',
-    	subtype:'casestudy',
-    	title: 'Lead Generation',
-    	date: 1426790085966
-    },{
-    	user: 'Ruchi',
-    	type:'Organic',
-    	title: 'Marketing Generation',
-    	date: 1426788260568
-    },{
-    	user: 'Stan',
-    	type:'Paid',
-    	title: 'Social Reach',
-    	date:1426784711726
-
-    },{
-    	user: 'Yingyi',
-    	type:'video',
-    	subtype:'webinar',
-    	title: 'Team Big Time Real',
-    	date: 1426781133136
+var io = require('socket.io')(8080);
+var nasps = ['captora.com', 'dnb.com', 'hoovers.com'];
+var cpSocket;
+var onConnection = function(socket) {
+    var isCp;
+    if (socket.nsp.name === '/captora.com') {
+        isCp = true;
+        cpSocket = socket;
+    }
+    var mock = [{
+        user: 'Dnb',
+        type: 'document',
+        subtype: 'casestudy',
+        title: 'Lead Generation',
+        date: 1426790085966
+    }, {
+        user: 'Hoover',
+        type: 'Organic',
+        title: 'Marketing Generation',
+        date: 1426788260568
+    }, {
+        user: 'Stan',
+        type: 'Paid',
+        title: 'Social Reach',
+        date: 1426784711726
+    }, {
+        user: 'Yingyi',
+        type: 'video',
+        subtype: 'webinar',
+        title: `Team Big Time Real`,
+        date: 1426781133136
     }]
     socket.emit('notification', mock);
-
     socket.on('NEW_CONTENT', function(data) {
-        socket.emit('NEW_NOTIFICATION', data);
+        socket.broadcast.emit('NEW_NOTIFICATION', data);
+        if (!isCp) {
+            cpSocket.broadcast.emit('NEW_NOTIFICATION', data);
+        }
     });
+};
+nasps.forEach(function(nasp) {
+        nasp = io.of(`/${nasp}`);
+    nasp.on('connection',onConnection);
 });
-
-// http.listen(3000, function(){
-//   console.log('listening on *:3000');
-// });
 
 module.exports = app;
