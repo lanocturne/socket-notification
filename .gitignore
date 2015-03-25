@@ -3,6 +3,11 @@
 
 # Ada Library Information
 *.ali
+
+#node
+.idea
 node_components
 app.sublime*
-.idea
+
+.idea/jsLibraryMappings.xml
+.idea/libraries/socket_notification_node_modules.xml

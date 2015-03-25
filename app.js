@@ -8,6 +8,7 @@ var onConnection = function(socket) {
         isCp = true;
         cpSocket = socket;
     }
+    // console.log('connected');
     var mock = [{
         user: 'Dnb',
         type: 'document',
@@ -31,7 +32,10 @@ var onConnection = function(socket) {
         title: `Team Big Time Real`,
         date: 1426781133136
     }]
-    socket.emit('notification', mock);
+    socket.emit('OFFLINE_NOTES', mock);
+    socket.on('TOKEN',function(token){
+        console.log(token);
+    });
     socket.on('NEW_CONTENT', function(data) {
         socket.broadcast.emit('NEW_NOTIFICATION', data);
         if (!isCp) {
