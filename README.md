@@ -1,2 +1,6 @@
 # socket-notification
-Node server for websocket and APN pusher
+An example on Node server for websocket using socket.io
+
+1. Clone
+2. npm install
+3. node it
